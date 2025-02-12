@@ -4,8 +4,19 @@
 #include "Common\DeviceResources.h"
 #include "Content\Sample3DSceneRenderer.h"
 #include "Content\SampleFpsTextRenderer.h"
+#include "d2d1.h"
+#include "d2d1helper.h"
+#include "d2dbasetypes.h"
+#include "d2derr.h"
+#include "d2d1_1.h"
+#include "d2d1_1helper.h"
+#include "d2d1effects.h"
+#include "d2d1effecthelpers.h"
+#include "mainMenu.h"
 
 // Renders Direct2D and 3D content on the screen.
+using namespace Windows::Foundation;
+
 namespace blenderUWP
 {
 	class blenderUWPMain : public DX::IDeviceNotify
@@ -24,9 +35,7 @@ namespace blenderUWP
 	private:
 		// Cached pointer to device resources.
 		std::shared_ptr<DX::DeviceResources> m_deviceResources;
-
-		// TODO: Replace with your own content renderers.
-		std::unique_ptr<Sample3DSceneRenderer> m_sceneRenderer;
+		std::unique_ptr<MainMenuRenderer> m_mainMenuRenderer;
 		std::unique_ptr<SampleFpsTextRenderer> m_fpsTextRenderer;
 
 		// Rendering loop timer.
