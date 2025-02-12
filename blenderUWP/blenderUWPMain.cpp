@@ -6,7 +6,7 @@
 #include "d3d11.h"
 #include "D2DBaseTypes.h"
 #include "dcommon.h"
-#include "mainMenu.h"
+#include "TextDisplay.h"
 
 using namespace blenderUWP;
 using namespace Windows::Foundation;
@@ -19,8 +19,11 @@ blenderUWPMain::blenderUWPMain(const std::shared_ptr<DX::DeviceResources>& devic
 {
 	// Register to be notified if the Device is lost or recreated
 	m_deviceResources->RegisterDeviceNotify(this);
-	m_mainMenuRenderer = std::unique_ptr<MainMenuRenderer>(new MainMenuRenderer(m_deviceResources));
-	m_fpsTextRenderer = std::unique_ptr<SampleFpsTextRenderer>(new SampleFpsTextRenderer(m_deviceResources));
+	Size screenSize = m_deviceResources->GetLogicalSize();
+	m_mainMenuEnabled = true;
+	m_mainMenuTextElements = std::vector<TextDisplay>();
+	m_mainMenuTextElements.push_back(TextDisplay(deviceResources, std::wstring(L"Blender UWP port"), DWRITE_PARAGRAPH_ALIGNMENT_CENTER, DWRITE_FONT_STYLE_NORMAL, DWRITE_FONT_WEIGHT_LIGHT, DWRITE_FONT_STRETCH_NORMAL,
+		32.0f, D2D1::ColorF(D2D1::ColorF::BlueViolet), DWRITE_TEXT_ALIGNMENT_CENTER, screenSize.Width / 2, 125.0f, 250.0f, 125.0f));
 }
 
 blenderUWPMain::~blenderUWPMain()
@@ -41,8 +44,11 @@ void blenderUWPMain::Update()
 	// Update scene objects.
 	m_timer.Tick([&]()
 	{
-		m_fpsTextRenderer->Update(m_timer);
-		m_mainMenuRenderer->Update(m_timer);
+		if (m_mainMenuEnabled) {
+			for (int i = 0; i < m_mainMenuTextElements.size(); i++) {
+				m_mainMenuTextElements[i].Update();
+			}
+		}
 	});
 }
 
@@ -64,20 +70,26 @@ bool blenderUWPMain::Render()
 	// Reset render targets to the screen.
 	ID3D11RenderTargetView *const targets[1] = { m_deviceResources->GetBackBufferRenderTargetView() };
 	context->OMSetRenderTargets(1, targets, m_deviceResources->GetDepthStencilView());
-	m_mainMenuRenderer->Render();
-	m_fpsTextRenderer->Render();
-
+	if (m_mainMenuEnabled) {
+		for (int i = 0; i < m_mainMenuTextElements.size(); i++) {
+			m_mainMenuTextElements[i].Render();
+		}
+	}
 	return true;
 }
 
 void blenderUWPMain::OnDeviceLost()
 {
-	m_fpsTextRenderer->ReleaseDeviceDependentResources();
+	for (int i = 0; i < m_mainMenuTextElements.size(); i++) {
+		m_mainMenuTextElements[i].ReleaseDeviceDependentResources();
+	}
 }
 
 // Notifies renderers that device resources may now be recreated.
 void blenderUWPMain::OnDeviceRestored()
 {
-	m_fpsTextRenderer->CreateDeviceDependentResources();
+	for (int i = 0; i < m_mainMenuTextElements.size(); i++) {
+		m_mainMenuTextElements[i].CreateDeviceDependentResources();
+	}
 	CreateWindowSizeDependentResources();
 }

@@ -12,7 +12,8 @@
 #include "d2d1_1helper.h"
 #include "d2d1effects.h"
 #include "d2d1effecthelpers.h"
-#include "mainMenu.h"
+#include <vector>
+#include "TextDisplay.h"
 
 // Renders Direct2D and 3D content on the screen.
 using namespace Windows::Foundation;
@@ -35,10 +36,9 @@ namespace blenderUWP
 	private:
 		// Cached pointer to device resources.
 		std::shared_ptr<DX::DeviceResources> m_deviceResources;
-		std::unique_ptr<MainMenuRenderer> m_mainMenuRenderer;
-		std::unique_ptr<SampleFpsTextRenderer> m_fpsTextRenderer;
-
 		// Rendering loop timer.
 		DX::StepTimer m_timer;
+		bool m_mainMenuEnabled;
+		std::vector<TextDisplay> m_mainMenuTextElements;
 	};
 }
