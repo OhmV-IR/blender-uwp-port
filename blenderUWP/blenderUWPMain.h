@@ -14,6 +14,7 @@
 #include "d2d1effecthelpers.h"
 #include <vector>
 #include "TextDisplay.h"
+#include "ColorBackground.h"
 
 // Renders Direct2D and 3D content on the screen.
 using namespace Windows::Foundation;
@@ -40,5 +41,6 @@ namespace blenderUWP
 		DX::StepTimer m_timer;
 		bool m_mainMenuEnabled;
 		std::vector<TextDisplay> m_mainMenuTextElements;
+		std::unique_ptr<ColorBackground> m_mainMenuBackground;
 	};
 }

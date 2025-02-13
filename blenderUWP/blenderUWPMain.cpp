@@ -7,6 +7,7 @@
 #include "D2DBaseTypes.h"
 #include "dcommon.h"
 #include "TextDisplay.h"
+#include "ColorBackground.h"
 
 using namespace blenderUWP;
 using namespace Windows::Foundation;
@@ -24,6 +25,7 @@ blenderUWPMain::blenderUWPMain(const std::shared_ptr<DX::DeviceResources>& devic
 	m_mainMenuTextElements = std::vector<TextDisplay>();
 	m_mainMenuTextElements.push_back(TextDisplay(deviceResources, std::wstring(L"Blender UWP port"), DWRITE_PARAGRAPH_ALIGNMENT_CENTER, DWRITE_FONT_STYLE_NORMAL, DWRITE_FONT_WEIGHT_LIGHT, DWRITE_FONT_STRETCH_NORMAL,
 		32.0f, D2D1::ColorF(D2D1::ColorF::BlueViolet), DWRITE_TEXT_ALIGNMENT_CENTER, screenSize.Width / 2, 125.0f, 250.0f, 125.0f));
+	m_mainMenuBackground = std::unique_ptr<ColorBackground>(new ColorBackground(m_deviceResources, D2D1::ColorF(D2D1::ColorF::AntiqueWhite)));
 }
 
 blenderUWPMain::~blenderUWPMain()
@@ -71,6 +73,7 @@ bool blenderUWPMain::Render()
 	ID3D11RenderTargetView *const targets[1] = { m_deviceResources->GetBackBufferRenderTargetView() };
 	context->OMSetRenderTargets(1, targets, m_deviceResources->GetDepthStencilView());
 	if (m_mainMenuEnabled) {
+		m_mainMenuBackground->Render();
 		for (int i = 0; i < m_mainMenuTextElements.size(); i++) {
 			m_mainMenuTextElements[i].Render();
 		}
@@ -83,6 +86,7 @@ void blenderUWPMain::OnDeviceLost()
 	for (int i = 0; i < m_mainMenuTextElements.size(); i++) {
 		m_mainMenuTextElements[i].ReleaseDeviceDependentResources();
 	}
+	m_mainMenuBackground->ReleaseDeviceDependentResources();
 }
 
 // Notifies renderers that device resources may now be recreated.
@@ -91,5 +95,6 @@ void blenderUWPMain::OnDeviceRestored()
 	for (int i = 0; i < m_mainMenuTextElements.size(); i++) {
 		m_mainMenuTextElements[i].CreateDeviceDependentResources();
 	}
+	m_mainMenuBackground->CreateDeviceDependentResources();
 	CreateWindowSizeDependentResources();
 }
