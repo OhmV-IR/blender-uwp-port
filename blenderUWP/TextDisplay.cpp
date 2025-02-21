@@ -4,10 +4,9 @@
 #include "Common/DeviceResources.h"
 #include "Common/DirectXHelper.h"
 
-using namespace blenderUWP;
 using namespace Microsoft::WRL;
 using namespace DX;
-TextDisplay::TextDisplay(const std::shared_ptr<DX::DeviceResources>& deviceResources, std::wstring text, DWRITE_PARAGRAPH_ALIGNMENT paragraphAlign, DWRITE_FONT_STYLE fontStyle, DWRITE_FONT_WEIGHT fontWeight, DWRITE_FONT_STRETCH fontStretch, float fontSize, D2D1::ColorF brushColor, DWRITE_TEXT_ALIGNMENT textAlign, float offsetLeft, float offsetTop, float textWidth, float textHeight) : 
+TextDisplay::TextDisplay(const std::shared_ptr<DX::DeviceResources>& deviceResources, std::wstring text, DWRITE_PARAGRAPH_ALIGNMENT paragraphAlign, DWRITE_FONT_STYLE fontStyle, DWRITE_FONT_WEIGHT fontWeight, DWRITE_FONT_STRETCH fontStretch, float fontSize, D2D1_COLOR_F brushColor, DWRITE_TEXT_ALIGNMENT textAlign, float offsetLeft, float offsetTop, float textWidth, float textHeight) : 
 	m_deviceResources(deviceResources), m_text(text), m_paragraphAlign(paragraphAlign), m_fontStyle(fontStyle), m_fontWeight(fontWeight), m_fontStretch(fontStretch), m_fontSize(fontSize), m_brushColor(brushColor), m_textAlign(textAlign), m_offsetLeft(offsetLeft), m_offsetTop(offsetTop), m_textWidth(textWidth), m_textHeight(textHeight){
 	ZeroMemory(&m_textMetrics, sizeof(DWRITE_TEXT_METRICS));
 
@@ -68,7 +67,6 @@ void TextDisplay::Render() {
 	context->SaveDrawingState(m_stateBlock.Get());
 	context->BeginDraw();
 
-	// Position on the bottom right corner
 	D2D1::Matrix3x2F screenTranslation = D2D1::Matrix3x2F::Translation(
 		m_offsetLeft,
 		m_offsetTop

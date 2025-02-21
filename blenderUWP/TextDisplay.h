@@ -5,11 +5,10 @@
 #include <wrl/client.h>
 
 using namespace Microsoft::WRL;
-namespace blenderUWP {
 	class TextDisplay
 	{
 	public:
-		TextDisplay(const std::shared_ptr<DX::DeviceResources>& deviceResources, std::wstring text, DWRITE_PARAGRAPH_ALIGNMENT paragraphAlign, DWRITE_FONT_STYLE fontStyle, DWRITE_FONT_WEIGHT fontWeight, DWRITE_FONT_STRETCH fontStretch, float fontSize, D2D1::ColorF brushColor, DWRITE_TEXT_ALIGNMENT textAlign, float offsetLeft, float offsetTop, float textWidth, float textHeight);
+		TextDisplay(const std::shared_ptr<DX::DeviceResources>& deviceResources, std::wstring text, DWRITE_PARAGRAPH_ALIGNMENT paragraphAlign, DWRITE_FONT_STYLE fontStyle, DWRITE_FONT_WEIGHT fontWeight, DWRITE_FONT_STRETCH fontStretch, float fontSize, D2D1_COLOR_F brushColor, DWRITE_TEXT_ALIGNMENT textAlign, float offsetLeft, float offsetTop, float textWidth, float textHeight);
 		void Update();
 		void Render();
 		void CreateDeviceDependentResources();
@@ -34,5 +33,3 @@ namespace blenderUWP {
 		ComPtr<IDWriteTextLayout3> m_textLayout;
 		ComPtr<IDWriteTextFormat2> m_textFormat;
 	};
-
-}

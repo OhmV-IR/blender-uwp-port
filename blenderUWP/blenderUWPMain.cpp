@@ -8,6 +8,7 @@
 #include "dcommon.h"
 #include "TextDisplay.h"
 #include "ColorBackground.h"
+#include "ColorRectangleDisplay.h"
 
 using namespace blenderUWP;
 using namespace Windows::Foundation;
@@ -68,7 +69,6 @@ bool blenderUWPMain::Render()
 	// Reset the viewport to target the whole screen.
 	auto viewport = m_deviceResources->GetScreenViewport();
 	context->RSSetViewports(1, &viewport);
-
 	// Reset render targets to the screen.
 	ID3D11RenderTargetView *const targets[1] = { m_deviceResources->GetBackBufferRenderTargetView() };
 	context->OMSetRenderTargets(1, targets, m_deviceResources->GetDepthStencilView());
